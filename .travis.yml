@@ -1,0 +1,40 @@
+language: cpp
+matrix:
+  include:
+  - os: linux
+    compiler: gcc
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+          - george-edison55-precise-backports
+        packages:
+          - g++-4.9
+          - cmake
+          - cmake-data
+    env:
+      - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
+
+  - os: linux
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+          - george-edison55-precise-backports
+          - llvm-toolchain-trusty-4.0
+        packages:
+          - clang-4.0
+          - cmake
+          - cmake-data
+    env:
+      - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
+
+  - os: osx
+    osx_image: xcode8
+
+script:
+  - install -d build
+  - cd build
+  - cmake --config Release -DCMAKE_CXX_COMPILER=$CXX ..
+  - cmake --build .
+  - ctest
